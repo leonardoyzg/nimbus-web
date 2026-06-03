@@ -882,10 +882,12 @@ body{
 }
 
 .footer-social img{
-    width:40px;
-    height:40px;
     object-fit:contain;
     transition:.3s;
+    width:35px !important;
+    height:35px !important;
+    max-width:35px !important;
+    max-height:35px !important;
 }
 
 .footer-social img:hover{
