@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Ubicación y Encuesta - Nimbus</title>
+<link rel="stylesheet" href="styles.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<header class="navbar-nimbus">
+
+<div class="logo-area">
+<img src="Nimbus logo.png" alt="Nimbus Logo" class="logo">
+<h1>NIMBUS</h1>
+</div>
+
+<nav class="menu">
+        <a href="inicio.html">Inicio</a>
+        <a href="nosotros.html">Nosotros</a>
+        <a href="ubicacion_encuesta.html">Ubicación</a>
+        <a href="estelar.html">Producto Estelar</a>
+        
+        <button class="btn-logout" id="logoutBtn">
+        Cerrar sesión
+    </button>
+    </nav>
+
+
+
+</header>
+
+
+<section class="container py-5">
+
+    <div class="row g-4">
+
+        <!-- UBICACIÓN -->
+
+        <div class="col-lg-6">
+
+            <div class="card shadow-lg h-100">
+
+                <div class="card-body">
+
+                    <h2 class="text-center text-danger mb-4">
+                        Ubicación
+                    </h2>
+
+                    <div class="ratio ratio-16x9">
+
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2639.781887795757!2d-103.19299095059992!3d20.660816066930636!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8428b5e96e4bbd65%3A0x3116a98101842b0f!2sCETI%20Plantel%20Rio%20Santiago!5e0!3m2!1ses!2smx!4v1777039806892!5m2!1ses!2smx"
+                            allowfullscreen
+                            loading="lazy">
+                        </iframe>
+
+                    </div>
+
+                    <p class="text-center mt-3">
+                        CETI Río Santiago, Guadalajara, Jalisco
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ENCUESTA -->
+
+        <div class="col-lg-6">
+
+            <div class="card shadow-lg h-100">
+
+                <div class="card-body">
+
+                    <h2 class="text-center text-danger mb-4">
+                        Encuesta de Satisfacción
+                    </h2>
+
+                    <form onsubmit="enviarEncuesta(event)">
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                ¿Cómo calificarías Nimbus?
+                            </label>
+
+                            <select class="form-select" required>
+
+                                <option value="">
+                                    Selecciona una opción
+                                </option>
+
+                                <option>
+                                    Excelente
+                                </option>
+
+                                <option>
+                                    Bueno
+                                </option>
+
+                                <option>
+                                    Regular
+                                </option>
+
+                                <option>
+                                    Malo
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                ¿Qué aspecto te gusta más?
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                placeholder="Diseño, IA, tecnología..."
+                                required
+                            >
+
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                ¿Lo recomendarías?
+                            </label>
+
+                            <div class="form-check">
+
+                                <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    name="recomendacion"
+                                    required
+                                >
+
+                                <label class="form-check-label">
+                                    Sí
+                                </label>
+
+                            </div>
+
+                            <div class="form-check">
+
+                                <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    name="recomendacion"
+                                >
+
+                                <label class="form-check-label">
+                                    No
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label class="form-label">
+                                Comentarios
+                            </label>
+
+                            <textarea
+                                class="form-control"
+                                rows="4"
+                            ></textarea>
+
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="btn btn-danger w-100"
+                        >
+                            Enviar Encuesta
+                        </button>
+
+                        <p
+                            id="mensaje-encuesta"
+                            class="text-success text-center mt-3"
+                        ></p>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<footer class="footer">
+<p>© 2026 Nimbus Sistemas Aéreos Inteligentes</p>
+</footer>
+
+
+<!-- FIREBASE AUTH -->
+<script type="module">
+
+import { auth } from "./firebase-config.js";
+
+import {
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+
+const logoutBtn = document.getElementById("logoutBtn");
+
+// 🔐 PROTEGER PÁGINA
+onAuthStateChanged(auth, (user) => {
+
+    if (!user) {
+        window.location.href = "index.html";
+    }
+
+});
+
+// 🚪 LOGOUT REAL
+logoutBtn.addEventListener("click", async () => {
+
+    await signOut(auth);
+
+    window.location.href = "index.html";
+
+});
+
+// 📩 ENCUESTA (solo UI)
+function enviarEncuesta(event) {
+
+    event.preventDefault();
+
+    document.getElementById("mensaje-encuesta")
+        .innerText = "✅ ¡Gracias por responder la encuesta!";
+}
+
+// Hacer la función accesible globalmente
+window.enviarEncuesta = enviarEncuesta;
+
+</script>
+
+</body>
+</html>
