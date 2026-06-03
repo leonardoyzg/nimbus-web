@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | Nimbus</title>
+
+    <link
+        rel="stylesheet"
+        href="styles.css"
+    >
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-dark">
+
+    <!-- NAVBAR -->
+
+    <header class="navbar-nimbus">
+
+        <div class="logo-area">
+
+            <img
+                src="Nimbus logo.png"
+                alt="Nimbus"
+                class="logo"
+            >
+
+            <h1>NIMBUS</h1>
+
+        </div>
+
+    </header>
+
+    <!-- LOGIN -->
+
+    
+
+<div class="container vh-100 d-flex justify-content-center align-items-center">
+
+    <div class="card shadow-lg border-0" style="max-width:450px; width:100%;">
+
+        <div class="card-body text-center p-5">
+
+            <img
+                src="Nimbus logo.png"
+                alt="Nimbus"
+                width="100"
+                class="mb-3"
+            >
+
+            <h2 class="fw-bold">
+                NIMBUS
+            </h2>
+
+            <p class="text-muted mb-4">
+                Centro de Monitoreo Inteligente
+            </p>
+
+            <input
+                type="email"
+                id="correo"
+                class="form-control mb-3"
+                placeholder="Correo electrónico"
+            >
+
+            <input
+                type="password"
+                id="password"
+                class="form-control mb-3"
+                placeholder="Contraseña"
+            >
+
+            <button
+                id="btnLogin"
+                class="btn btn-danger w-100"
+            >
+                Ingresar
+            </button>
+
+            <p class="mt-4">
+
+                ¿No tienes cuenta?
+
+                <a href="register.html"
+                class="text-danger fw-bold text-decoration-none">
+                    
+                    Registrarme
+                </a>
+
+            </p>
+
+            <p id="mensaje-register"></p>
+
+        </div>
+
+    </div>
+
+</div>
+
+    <!-- FIREBASE -->
+
+    <script type="module">
+
+        import { auth }
+        from "./firebase-config.js";
+
+        import {
+
+            signInWithEmailAndPassword
+
+        }
+
+        from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+
+        const btnLogin =
+            document.getElementById("btnLogin");
+
+        btnLogin.addEventListener("click", async () => {
+
+            const correo =
+                document.getElementById("correo").value;
+
+            const password =
+                document.getElementById("password").value;
+
+            const mensaje =
+                document.getElementById("mensaje-register");
+
+            if (
+                correo === "" ||
+                password === ""
+            ) {
+
+                mensaje.innerText =
+                    "Completa todos los campos";
+
+                mensaje.style.color =
+                    "red";
+
+                return;
+            }
+
+            try {
+
+                await signInWithEmailAndPassword(
+                    auth,
+                    correo,
+                    password
+                );
+
+                mensaje.innerText =
+                    "Bienvenido a Nimbus";
+
+                mensaje.style.color =
+                    "green";
+
+                setTimeout(() => {
+
+                    window.location.href =
+                        "inicio.html";
+
+                }, 1200);
+
+            }
+
+            catch (error) {
+
+                mensaje.innerText =
+                    "Correo o contraseña incorrectos";
+
+                mensaje.style.color =
+                    "red";
+            }
+
+        });
+
+    </script>
+
+</body>
+
+</html>
