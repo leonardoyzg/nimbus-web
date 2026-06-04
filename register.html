@@ -116,123 +116,87 @@
 </div>
 
 </main>
+    
+<script type="module">
 
-    <!-- FIREBASE -->
+import { auth }
+from "./firebase-config.js";
 
-    <script type="module">
+import {
+    createUserWithEmailAndPassword
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
-        import { auth, db }
-        from "./firebase-config.js";
+const btnRegister =
+    document.getElementById("btnRegister");
 
-        import {
+btnRegister.addEventListener("click", async () => {
 
-            createUserWithEmailAndPassword
+    const nombre =
+        document.getElementById("nombre").value;
 
-        }
+    const correo =
+        document.getElementById("correo").value;
 
-        from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+    const password =
+        document.getElementById("password").value;
 
-        import {
+    const mensaje =
+        document.getElementById("mensaje-register");
 
-            doc,
-            setDoc
+    if (
+        nombre === "" ||
+        correo === "" ||
+        password === ""
+    ) {
 
-        }
+        mensaje.innerText =
+            "Completa todos los campos";
 
-        from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+        mensaje.style.color =
+            "red";
 
-        const btnRegister =
-            document.getElementById("btnRegister");
+        return;
+    }
 
-        btnRegister.addEventListener("click", async () => {
+    try {
 
-            const nombre =
-                document.getElementById("nombre").value;
+        await createUserWithEmailAndPassword(
+            auth,
+            correo,
+            password
+        );
 
-            const correo =
-                document.getElementById("correo").value;
+        mensaje.innerText =
+            "Cuenta creada correctamente";
 
-            const password =
-                document.getElementById("password").value;
+        mensaje.style.color =
+            "green";
 
-            const mensaje =
-                document.getElementById("mensaje-register");
+        setTimeout(() => {
 
-            if (
-                nombre === "" ||
-                correo === "" ||
-                password === ""
-            ) {
+            window.location.href =
+                "index.html";
 
-                mensaje.innerText =
-                    "Completa todos los campos";
+        }, 1500);
 
-                mensaje.style.color =
-                    "red";
+    }
 
-                return;
-            }
+    catch (error) {
 
-            try {
+        mensaje.innerText =
+            "Error al crear la cuenta";
 
-                // CREAR USUARIO AUTH
+        mensaje.style.color =
+            "red";
 
-                const userCredential =
-                    await createUserWithEmailAndPassword(
-                        auth,
-                        correo,
-                        password
-                    );
+            console.error(error);
 
-                const user =
-                    userCredential.user;
+    }
 
-                // GUARDAR DATOS EN FIRESTORE
+});
 
-                await setDoc(
-
-                    doc(
-                        db,
-                        "usuarios",
-                        user.uid
-                    ),
-
-                    {
-
-                        nombre: nombre,
-                        correo: correo
-
-                    }
-
-                );
-
-                mensaje.innerText =
-                    "Cuenta creada correctamente";
-
-                mensaje.style.color =
-                    "green";
-
-                setTimeout(() => {
-
-                    window.location.href =
-                        "index.html";
-
-                }, 1500);
-
-            }
-
-            catch (error) {
-
-                mensaje.innerText =
-                    error.message;
-
-                mensaje.style.color =
-                    "red";
-            }
-
-        });
-
-    </script>
+</script>
 
 </body>
 
